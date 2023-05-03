@@ -14,7 +14,7 @@ declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 pub mod deposit_for_nft {
     use super::*;
 
-    pub fn initialize(ctx: Context<Init>) -> Result<()> {
+    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
         
         instructions::initialize::handle(ctx)
     }

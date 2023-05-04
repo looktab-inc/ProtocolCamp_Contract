@@ -2,13 +2,14 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-deposit_for_nft = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+deposit_for_nft = "GKcWYEKo8ZWKRo82e2Vgd92JwVeqwT5XNfyMmR4j4sfX"
 
-[registry]
-url = "https://api.apr.dev"
+# [registry]
+# url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+# cluster = "Localnet"
+cluster = "http://127.0.0.1:8899"
 wallet = "/Users/taegi/.config/solana/id.json"
 
 [scripts]

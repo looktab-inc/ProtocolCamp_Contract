@@ -1,6 +1,6 @@
 use anchor_lang::{prelude::*, system_program, solana_program::native_token::LAMPORTS_PER_SOL};
 
-use crate::states::BankAccount;
+use crate::{states::BankAccount, DepositForNftError};
 
 #[derive(Accounts)]
 pub struct WithdrawSolForNft<'info> {
@@ -20,36 +20,40 @@ pub struct WithdrawSolForNft<'info> {
 pub fn handle(ctx: Context<WithdrawSolForNft>) -> Result<()> {
 
     let system_program = &ctx.accounts.system_program;
-    let bank_account = &ctx.accounts.bank_account;
+    let bank_account = &mut ctx.accounts.bank_account;
     let pda_auth = &mut ctx.accounts.pda_auth;
     let sol_vault = &mut ctx.accounts.sol_vault;
     let client_account = &mut ctx.accounts.client_account;
 
-    let seeds = &[
-        b"sol_vault",
-        pda_auth.to_account_info().key.as_ref(),
-        &[bank_account.sol_vault_bump.unwrap()],
-    ];
-    let sol_vault_signer = &[&seeds[..]];
+    if bank_account.nft_amount > 0 {
+        let seeds = &[
+            b"sol_vault",
+            pda_auth.to_account_info().key.as_ref(),
+            &[bank_account.sol_vault_bump.unwrap()],
+        ];
+        let sol_vault_signer = &[&seeds[..]];
 
-    // 1. transfer to client_account 
-    let cpi_accounts_to_client = system_program::Transfer {
-        from: sol_vault.to_account_info(),
-        to: client_account.to_account_info(),
-    };
-    let cpi_to_client = CpiContext::new_with_signer(system_program.to_account_info(), cpi_accounts_to_client, sol_vault_signer);
-    system_program::transfer(cpi_to_client, ((LAMPORTS_PER_SOL as f32) * 0.5) as u64);
+        // 1. transfer to client_account 
+        let cpi_accounts_to_client = system_program::Transfer {
+            from: sol_vault.to_account_info(),
+            to: client_account.to_account_info(),
+        };
+        let cpi_to_client = CpiContext::new_with_signer(system_program.to_account_info(), cpi_accounts_to_client, sol_vault_signer);
+        system_program::transfer(cpi_to_client, ((LAMPORTS_PER_SOL as f32) * 0.5) as u64);
 
 
-    // 2. transfer to bank_auth
-    let cpi_accounts_to_bank_auth = system_program::Transfer {
-        from: sol_vault.to_account_info(),
-        to: ctx.accounts.bank_auth.to_account_info(),
-    };
-    let cpi_to_bank_auth = CpiContext::new_with_signer(system_program.to_account_info(), cpi_accounts_to_bank_auth, sol_vault_signer);
-    system_program::transfer(cpi_to_bank_auth, ((LAMPORTS_PER_SOL as f32) * 0.5) as u64);
+        // 2. transfer to bank_auth
+        let cpi_accounts_to_bank_auth = system_program::Transfer {
+            from: sol_vault.to_account_info(),
+            to: ctx.accounts.bank_auth.to_account_info(),
+        };
+        let cpi_to_bank_auth = CpiContext::new_with_signer(system_program.to_account_info(), cpi_accounts_to_bank_auth, sol_vault_signer);
+        system_program::transfer(cpi_to_bank_auth, ((LAMPORTS_PER_SOL as f32) * 0.5) as u64);
 
-    
-
-    Ok(())
+        bank_account.nft_amount -= 1;
+        Ok(())
+    } else {
+        return err!(DepositForNftError::NoNftLeftError);
+    }
+    // Ok(())
 }

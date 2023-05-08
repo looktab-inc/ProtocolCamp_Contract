@@ -33,7 +33,7 @@ describe("deposit-for-nft", () => {
 
   });
 
-  it("Is initialized!", async () => {
+  it("Is Initialized!", async () => {
     // Add your test here.
     const tx = await program.methods.initialize()
       .accounts({
@@ -50,4 +50,9 @@ describe("deposit-for-nft", () => {
     const result = await program.account.bankAccount.fetch(bankAccount.publicKey);
     console.log(result);
   });
+
+  it("Deposit Sol For a NFT", async () => {
+    const deposit_amount = new anchor.BN(0.1 * anchor.web3.LAMPORTS_PER_SOL);
+    // const deposit_native_tx = await program.
+  })
 });

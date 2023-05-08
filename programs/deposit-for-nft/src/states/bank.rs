@@ -2,7 +2,7 @@ use anchor_lang::prelude::*;
 
 #[account]
 pub struct BankAccount {
-    pub deposit_auth: Pubkey,
+    pub bank_auth: Pubkey,
     pub auth_bump: u8,
     pub sol_vault_bump: Option<u8>,
     pub nft_amount: u16,

@@ -20,6 +20,14 @@ describe("deposit-for-nft", () => {
     program.programId
   );
 
+  let [solVault, _solBump] = anchor.web3.PublicKey.findProgramAddressSync(
+    [
+      anchor.utils.bytes.utf8.encode("sol-vault"),
+      pdaAuth.toBuffer()
+    ],
+    program.programId
+  );
+
   before(async () => {
     let res = await provider.connection.requestAirdrop(bankAuth.publicKey, 100 * anchor.web3.LAMPORTS_PER_SOL);
 
@@ -47,12 +55,29 @@ describe("deposit-for-nft", () => {
       ]).rpc();
     console.log("Your transaction signature", tx);
 
-    const result = await program.account.bankAccount.fetch(bankAccount.publicKey);
-    console.log(result);
+    const banAccountInfo = await program.account.bankAccount.fetch(bankAccount.publicKey);
+    console.log(`[Bank Account Info]\n`);
+    console.log(banAccountInfo);
   });
 
   it("Deposit Sol For a NFT", async () => {
-    const deposit_amount = new anchor.BN(0.1 * anchor.web3.LAMPORTS_PER_SOL);
-    // const deposit_native_tx = await program.
+    const sol_amount = new anchor.BN(0.1 * anchor.web3.LAMPORTS_PER_SOL);
+    const deposit_tx = await program.methods.depositForNft(sol_amount)
+      .accounts({
+        bankAccount: bankAccount.publicKey,
+        pdaAuth: pdaAuth,
+        bankAuth: bankAuth.publicKey,
+        solVault: solVault,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      }).signers([
+        bankAuth,
+      ]).rpc();
+
+    const vault_balance = await provider.connection.getBalance(solVault);
+    console.log(`[Vault Balance]\n${vault_balance}`);
+
+    let bankAccountInfo = await program.account.bankAccount.fetch(bankAccount.publicKey);
+    console.log(`[Bank Account Info]\n`);
+    console.log(bankAccountInfo);
   })
 });

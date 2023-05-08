@@ -6,10 +6,10 @@ use crate::states::BankAccount;
 pub struct DepositSolForNft<'info> {
     #[account(mut, has_one = bank_auth)]
     pub bank_account: Account<'info, BankAccount>,
-    #[account(seeds = [b"auth", bank_account.key().as_ref()], bump = bank_account.auth_bump)]
+    #[account(seeds = [b"pda-auth", bank_account.key().as_ref()], bump = bank_account.auth_bump)]
     /// CHECK: no need to check this.
     pub pda_auth: UncheckedAccount<'info>,
-    #[account(mut, seeds = [b"sol_vault", pda_auth.key().as_ref()], bump)]
+    #[account(mut, seeds = [b"sol-vault", pda_auth.key().as_ref()], bump)]
     pub sol_vault: SystemAccount<'info>,
     #[account(mut)]
     pub bank_auth: Signer<'info>,
@@ -33,7 +33,9 @@ pub fn handle(ctx: Context<DepositSolForNft>, amount: u64) -> Result<()> {
         cpi_accounts,
     );
 
-    system_program::transfer(cpi, amount)?;
+    system_program::transfer(cpi, amount);
+
+    bank_account.nft_amount += 1;
 
     msg!("finished depositing sol for a NFT");
     Ok(())

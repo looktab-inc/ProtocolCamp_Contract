@@ -19,6 +19,9 @@ pub struct DepositSolForNft<'info> {
 pub fn handle(ctx: Context<DepositSolForNft>, amount: u64) -> Result<()> {
     let bank_account = &mut ctx.accounts.bank_account;
 
+
+    // have to check if bank_auth has sufficient balance.
+
     let bank_auth = &ctx.accounts.bank_auth;
     let system_program = &ctx.accounts.system_program;
 

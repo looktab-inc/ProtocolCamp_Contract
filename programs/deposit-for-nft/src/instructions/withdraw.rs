@@ -14,20 +14,22 @@ pub struct WithdrawSolForNft<'info> {
     #[account(mut)]
     pub bank_auth: Signer<'info>,
     pub system_program: Program<'info, System>,
+    #[account(mut)]
     pub client_account: SystemAccount<'info>,
 }
 
 pub fn handle(ctx: Context<WithdrawSolForNft>) -> Result<()> {
 
+    msg!("withdraw sol for nft start!!");
+
     let system_program = &ctx.accounts.system_program;
     let bank_account = &mut ctx.accounts.bank_account;
     let pda_auth = &mut ctx.accounts.pda_auth;
     let sol_vault = &mut ctx.accounts.sol_vault;
-    let client_account = &mut ctx.accounts.client_account;
 
     if bank_account.nft_amount > 0 {
         let seeds = &[
-            b"sol_vault",
+            b"sol-vault",
             pda_auth.to_account_info().key.as_ref(),
             &[bank_account.sol_vault_bump.unwrap()],
         ];
@@ -36,10 +38,10 @@ pub fn handle(ctx: Context<WithdrawSolForNft>) -> Result<()> {
         // 1. transfer to client_account 
         let cpi_accounts_to_client = system_program::Transfer {
             from: sol_vault.to_account_info(),
-            to: client_account.to_account_info(),
+            to: ctx.accounts.client_account.to_account_info(),
         };
         let cpi_to_client = CpiContext::new_with_signer(system_program.to_account_info(), cpi_accounts_to_client, sol_vault_signer);
-        system_program::transfer(cpi_to_client, ((LAMPORTS_PER_SOL as f32) * 0.5) as u64);
+        system_program::transfer(cpi_to_client, ((LAMPORTS_PER_SOL as f32) * 0.05) as u64);
 
 
         // 2. transfer to bank_auth
@@ -48,12 +50,12 @@ pub fn handle(ctx: Context<WithdrawSolForNft>) -> Result<()> {
             to: ctx.accounts.bank_auth.to_account_info(),
         };
         let cpi_to_bank_auth = CpiContext::new_with_signer(system_program.to_account_info(), cpi_accounts_to_bank_auth, sol_vault_signer);
-        system_program::transfer(cpi_to_bank_auth, ((LAMPORTS_PER_SOL as f32) * 0.5) as u64);
+        system_program::transfer(cpi_to_bank_auth, ((LAMPORTS_PER_SOL as f32) * 0.05) as u64);
 
         bank_account.nft_amount -= 1;
+        
         Ok(())
     } else {
         return err!(DepositForNftError::NoNftLeftError);
     }
-    // Ok(())
 }

@@ -2,7 +2,7 @@ import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { DepositForNft } from "../target/types/deposit_for_nft";
 
-describe("deposit-for-nft", () => {
+describe("bank-for-nft", () => {
   // Configure the client to use the local cluster.
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
@@ -11,6 +11,7 @@ describe("deposit-for-nft", () => {
 
   const bankAuth = anchor.web3.Keypair.generate();
   const bankAccount = anchor.web3.Keypair.generate();
+  const clientAccount = anchor.web3.Keypair.generate();
 
   let [pdaAuth, _pdaBump] = anchor.web3.PublicKey.findProgramAddressSync(
     [
@@ -61,8 +62,8 @@ describe("deposit-for-nft", () => {
   });
 
   it("Deposit Sol For a NFT", async () => {
-    const sol_amount = new anchor.BN(0.1 * anchor.web3.LAMPORTS_PER_SOL);
-    const deposit_tx = await program.methods.depositForNft(sol_amount)
+    const solAmount = new anchor.BN(0.1 * anchor.web3.LAMPORTS_PER_SOL);
+    const depositTx = await program.methods.depositForNft(solAmount)
       .accounts({
         bankAccount: bankAccount.publicKey,
         pdaAuth: pdaAuth,
@@ -73,11 +74,38 @@ describe("deposit-for-nft", () => {
         bankAuth,
       ]).rpc();
 
-    const vault_balance = await provider.connection.getBalance(solVault);
-    console.log(`[Vault Balance]\n${vault_balance}`);
+    const vaultBalance = await provider.connection.getBalance(solVault);
+    console.log(`[Vault Balance]\n${vaultBalance}`);
 
     let bankAccountInfo = await program.account.bankAccount.fetch(bankAccount.publicKey);
     console.log(`[Bank Account Info]\n`);
     console.log(bankAccountInfo);
-  })
+  });
+
+  it("Withdraw Sol for a NFT", async () => {
+    const withdrawTx = await program.methods.withdrawForNft()
+      .accounts({
+        bankAccount: bankAccount.publicKey,
+        pdaAuth: pdaAuth,
+        solVault: solVault,
+        bankAuth: bankAuth.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        clientAccount: clientAccount.publicKey,
+      }).signers([
+        bankAuth,
+      ]).rpc();
+
+    const vaultBalance = await provider.connection.getBalance(solVault);
+    console.log(`[Vault Balance]\n${vaultBalance}`);
+
+    const bankAuthBalance = await provider.connection.getBalance(bankAuth.publicKey);
+    console.log(`[Bank Auth Balance]\n${bankAuthBalance}`);
+
+    const clientAccountBalance = await provider.connection.getBalance(clientAccount.publicKey);
+    console.log(`[Client Account Balance]\n${clientAccountBalance}`);
+
+    let bankAccountInfo = await program.account.bankAccount.fetch(bankAccount.publicKey);
+    console.log(`[Bank Account Info]\n`);
+    console.log(bankAccountInfo);
+  });
 });

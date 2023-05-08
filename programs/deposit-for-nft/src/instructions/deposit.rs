@@ -18,6 +18,7 @@ pub struct DepositSolForNft<'info> {
 
 pub fn handle(ctx: Context<DepositSolForNft>, amount: u64) -> Result<()> {
     let bank_account = &mut ctx.accounts.bank_account;
+
     let bank_auth = &ctx.accounts.bank_auth;
     let system_program = &ctx.accounts.system_program;
 
@@ -33,8 +34,7 @@ pub fn handle(ctx: Context<DepositSolForNft>, amount: u64) -> Result<()> {
         cpi_accounts,
     );
 
-    system_program::transfer(cpi, amount);
-
+    system_program::transfer(cpi, amount)?;
     bank_account.nft_amount += 1;
 
     msg!("finished depositing sol for a NFT");

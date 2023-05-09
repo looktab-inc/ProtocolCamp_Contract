@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-use crate::{states::BankAccount};
+use crate::states::BankAccount;
 
 #[derive(Accounts)]
 pub struct Initialize<'info> {
@@ -13,7 +13,6 @@ pub struct Initialize<'info> {
     pub bank_auth: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
-
 
 pub fn handle(ctx: Context<Initialize>) -> Result<()> {
     let bank_account = &mut ctx.accounts.bank_account;

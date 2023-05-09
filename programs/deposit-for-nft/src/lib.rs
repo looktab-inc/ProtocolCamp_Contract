@@ -1,13 +1,13 @@
 use anchor_lang::prelude::*;
 
-pub mod errors;
 pub mod constants;
+pub mod errors;
 mod instructions;
 mod states;
 
 pub use errors::DepositForNftError;
-pub use instructions::initialize::*;
 pub use instructions::deposit::*;
+pub use instructions::initialize::*;
 pub use instructions::withdraw::*;
 
 declare_id!("GKcWYEKo8ZWKRo82e2Vgd92JwVeqwT5XNfyMmR4j4sfX");
@@ -28,4 +28,3 @@ pub mod deposit_for_nft {
         instructions::withdraw::handle(ctx, 5.0, 5.0)
     }
 }
-

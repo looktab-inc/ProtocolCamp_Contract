@@ -1,4 +1,4 @@
-use anchor_lang::{prelude::*, system_program, solana_program::native_token::LAMPORTS_PER_SOL};
+use anchor_lang::{prelude::*, solana_program::native_token::LAMPORTS_PER_SOL, system_program};
 
 use crate::{states::BankAccount, DepositForNftError};
 
@@ -19,7 +19,6 @@ pub struct WithdrawSolForNft<'info> {
 }
 
 pub fn handle(ctx: Context<WithdrawSolForNft>, client_ratio: f32, bank_ratio: f32) -> Result<()> {
-
     msg!("withdraw sol for nft start!!");
 
     let system_program = &ctx.accounts.system_program;
@@ -38,26 +37,28 @@ pub fn handle(ctx: Context<WithdrawSolForNft>, client_ratio: f32, bank_ratio: f3
         ];
         let sol_vault_signer = &[&seeds[..]];
 
-        // 1. transfer to client_account 
+        // 1. transfer to client_account
         let cpi_accounts_to_client = system_program::Transfer {
             from: sol_vault.to_account_info(),
             to: ctx.accounts.client_account.to_account_info(),
         };
         let cpi_to_client = CpiContext::new_with_signer(
-            system_program.to_account_info(), 
-            cpi_accounts_to_client, sol_vault_signer);
-        system_program::transfer(
-            cpi_to_client,
-            ((LAMPORTS_PER_SOL as f32) * 0.05) as u64
-        )?;
-
+            system_program.to_account_info(),
+            cpi_accounts_to_client,
+            sol_vault_signer,
+        );
+        system_program::transfer(cpi_to_client, ((LAMPORTS_PER_SOL as f32) * 0.05) as u64)?;
 
         // 2. transfer to bank_auth
         let cpi_accounts_to_bank_auth = system_program::Transfer {
             from: sol_vault.to_account_info(),
             to: ctx.accounts.bank_auth.to_account_info(),
         };
-        let cpi_to_bank_auth = CpiContext::new_with_signer(system_program.to_account_info(), cpi_accounts_to_bank_auth, sol_vault_signer);
+        let cpi_to_bank_auth = CpiContext::new_with_signer(
+            system_program.to_account_info(),
+            cpi_accounts_to_bank_auth,
+            sol_vault_signer,
+        );
         system_program::transfer(cpi_to_bank_auth, ((LAMPORTS_PER_SOL as f32) * 0.05) as u64)?;
 
         bank_account.nft_amount -= 1;

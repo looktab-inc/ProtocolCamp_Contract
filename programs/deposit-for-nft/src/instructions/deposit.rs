@@ -19,7 +19,6 @@ pub struct DepositSolForNft<'info> {
 pub fn handle(ctx: Context<DepositSolForNft>, amount: u64) -> Result<()> {
     let bank_account = &mut ctx.accounts.bank_account;
 
-
     // have to check if bank_auth has sufficient balance.
 
     let bank_auth = &ctx.accounts.bank_auth;
@@ -32,10 +31,7 @@ pub fn handle(ctx: Context<DepositSolForNft>, amount: u64) -> Result<()> {
         to: ctx.accounts.sol_vault.to_account_info(),
     };
 
-    let cpi = CpiContext::new(
-        system_program.to_account_info(),
-        cpi_accounts,
-    );
+    let cpi = CpiContext::new(system_program.to_account_info(), cpi_accounts);
 
     system_program::transfer(cpi, amount)?;
     bank_account.nft_amount += 1;

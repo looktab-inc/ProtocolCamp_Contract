@@ -83,7 +83,7 @@ describe("bank-for-nft", () => {
   });
 
   it("Withdraw Sol for a NFT", async () => {
-    const withdrawTx = await program.methods.withdrawForNft()
+    const withdrawTx = await program.methods.withdrawHalfForNft()
       .accounts({
         bankAccount: bankAccount.publicKey,
         pdaAuth: pdaAuth,

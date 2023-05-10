@@ -1,4 +1,4 @@
-use anchor_lang::{prelude::*, solana_program::native_token::LAMPORTS_PER_SOL, system_program};
+use anchor_lang::{prelude::*, system_program};
 
 use crate::{constants::DEPOSIT_PER_NFT, states::BankAccount, DepositForNftError};
 

@@ -22,7 +22,10 @@ describe("bank-for-nft", () => {
   );
 
   let [solVault, _solBump] = anchor.web3.PublicKey.findProgramAddressSync(
-    [anchor.utils.bytes.utf8.encode("sol-vault"), pdaAuth.toBuffer()],
+    [
+      anchor.utils.bytes.utf8.encode("sol-vault"), 
+      pdaAuth.toBuffer()
+    ],
     program.programId
   );
 

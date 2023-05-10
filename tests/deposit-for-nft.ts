@@ -63,9 +63,9 @@ describe("bank-for-nft", () => {
   });
 
   it("Deposit Sol For a NFT", async () => {
-    const solAmount = new anchor.BN(0.1 * anchor.web3.LAMPORTS_PER_SOL);
+    // const solAmount = new anchor.BN(0.1 * anchor.web3.LAMPORTS_PER_SOL);
     const depositTx = await program.methods
-      .depositForNft(solAmount)
+      .depositForNft()
       .accounts({
         bankAccount: bankAccount.publicKey,
         pdaAuth: pdaAuth,

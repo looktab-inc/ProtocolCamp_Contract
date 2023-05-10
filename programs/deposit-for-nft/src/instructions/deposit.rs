@@ -1,6 +1,6 @@
 use anchor_lang::{prelude::*, system_program};
 
-use crate::states::BankAccount;
+use crate::{constants::DEPOSIT_PER_NFT, states::BankAccount};
 
 #[derive(Accounts)]
 pub struct DepositSolForNft<'info> {
@@ -16,7 +16,7 @@ pub struct DepositSolForNft<'info> {
     pub system_program: Program<'info, System>,
 }
 
-pub fn handle(ctx: Context<DepositSolForNft>, amount: u64) -> Result<()> {
+pub fn handle(ctx: Context<DepositSolForNft>) -> Result<()> {
     let bank_account = &mut ctx.accounts.bank_account;
 
     // have to check if bank_auth has sufficient balance.
@@ -33,7 +33,7 @@ pub fn handle(ctx: Context<DepositSolForNft>, amount: u64) -> Result<()> {
 
     let cpi = CpiContext::new(system_program.to_account_info(), cpi_accounts);
 
-    system_program::transfer(cpi, amount)?;
+    system_program::transfer(cpi, DEPOSIT_PER_NFT)?;
     bank_account.nft_amount.increase_one();
 
     msg!("finished depositing sol for a NFT");

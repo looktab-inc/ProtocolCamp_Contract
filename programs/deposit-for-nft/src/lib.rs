@@ -20,11 +20,21 @@ pub mod deposit_for_nft {
         instructions::initialize::handle(ctx)
     }
 
-    pub fn deposit_for_nft(ctx: Context<DepositSolForNft>, amount: u64) -> Result<()> {
-        instructions::deposit::handle(ctx, amount)
+    pub fn deposit_for_nft(ctx: Context<DepositSolForNft>) -> Result<()> {
+        instructions::deposit::handle(ctx)
     }
 
     pub fn withdraw_half_for_nft(ctx: Context<WithdrawSolForNft>) -> Result<()> {
         instructions::withdraw::handle(ctx, 5, 5)
+    }
+
+    pub fn withdraw_for_like(ctx: Context<WithdrawSolForNft>) -> Result<()> {
+        // instructions::withdraw::handle(ctx, 9, 1)
+        todo!()
+    }
+
+    pub fn withdraw_for_dislike(ctx: Context<WithdrawSolForNft>) -> Result<()> {
+        // instructions::withdraw::handle(ctx, 1, 9)
+        todo!()
     }
 }

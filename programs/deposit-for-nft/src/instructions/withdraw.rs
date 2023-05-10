@@ -1,6 +1,6 @@
 use anchor_lang::{prelude::*, solana_program::native_token::LAMPORTS_PER_SOL, system_program};
 
-use crate::{states::BankAccount, DepositForNftError};
+use crate::{constants::DEPOSIT_PER_NFT, states::BankAccount, DepositForNftError};
 
 #[derive(Accounts)]
 pub struct WithdrawSolForNft<'info> {
@@ -26,8 +26,8 @@ pub fn handle(ctx: Context<WithdrawSolForNft>, client_ratio: u8, bank_ratio: u8)
     let pda_auth = &mut ctx.accounts.pda_auth;
     let sol_vault = &mut ctx.accounts.sol_vault;
 
-    let client_amount = 0.01 * (client_ratio as f64);
-    let bank_amount = 0.01 * (bank_ratio as f64);
+    let client_amount = (DEPOSIT_PER_NFT as f64 * (0.1 * client_ratio as f64)) as u64;
+    let bank_amount = (DEPOSIT_PER_NFT as f64 * (0.1 * bank_ratio as f64)) as u64;
 
     if bank_account.nft_amount.remained() > 0 {
         let seeds = &[
@@ -49,7 +49,8 @@ pub fn handle(ctx: Context<WithdrawSolForNft>, client_ratio: u8, bank_ratio: u8)
         );
         system_program::transfer(
             cpi_to_client,
-            ((LAMPORTS_PER_SOL as f64) * client_amount) as u64,
+            // ((LAMPORTS_PER_SOL as f64) * client_amount) as u64,
+            client_amount,
         )?;
 
         // 2. transfer to bank_auth
@@ -64,7 +65,8 @@ pub fn handle(ctx: Context<WithdrawSolForNft>, client_ratio: u8, bank_ratio: u8)
         );
         system_program::transfer(
             cpi_to_bank_auth,
-            ((LAMPORTS_PER_SOL as f64) * bank_amount) as u64,
+            // ((LAMPORTS_PER_SOL as f64) * bank_amount) as u64,
+            bank_amount,
         )?;
 
         bank_account.nft_amount.decrease_one();

@@ -18,7 +18,7 @@ pub struct WithdrawSolForNft<'info> {
     pub client_account: SystemAccount<'info>,
 }
 
-pub fn handle(ctx: Context<WithdrawSolForNft>, client_ratio: f32, bank_ratio: f32) -> Result<()> {
+pub fn handle(ctx: Context<WithdrawSolForNft>, client_ratio: u8, bank_ratio: u8) -> Result<()> {
     msg!("withdraw sol for nft start!!");
 
     let system_program = &ctx.accounts.system_program;
@@ -26,8 +26,8 @@ pub fn handle(ctx: Context<WithdrawSolForNft>, client_ratio: f32, bank_ratio: f3
     let pda_auth = &mut ctx.accounts.pda_auth;
     let sol_vault = &mut ctx.accounts.sol_vault;
 
-    let client_amount = 0.01 * (client_ratio as f32);
-    let bank_amount = 0.01 * (bank_ratio as f32);
+    let client_amount = 0.01 * (client_ratio as f64);
+    let bank_amount = 0.01 * (bank_ratio as f64);
 
     if bank_account.nft_amount > 0 {
         let seeds = &[
@@ -47,7 +47,10 @@ pub fn handle(ctx: Context<WithdrawSolForNft>, client_ratio: f32, bank_ratio: f3
             cpi_accounts_to_client,
             sol_vault_signer,
         );
-        system_program::transfer(cpi_to_client, ((LAMPORTS_PER_SOL as f32) * 0.05) as u64)?;
+        system_program::transfer(
+            cpi_to_client,
+            ((LAMPORTS_PER_SOL as f64) * client_amount) as u64,
+        )?;
 
         // 2. transfer to bank_auth
         let cpi_accounts_to_bank_auth = system_program::Transfer {
@@ -59,7 +62,10 @@ pub fn handle(ctx: Context<WithdrawSolForNft>, client_ratio: f32, bank_ratio: f3
             cpi_accounts_to_bank_auth,
             sol_vault_signer,
         );
-        system_program::transfer(cpi_to_bank_auth, ((LAMPORTS_PER_SOL as f32) * 0.05) as u64)?;
+        system_program::transfer(
+            cpi_to_bank_auth,
+            ((LAMPORTS_PER_SOL as f64) * bank_amount) as u64,
+        )?;
 
         bank_account.nft_amount -= 1;
 

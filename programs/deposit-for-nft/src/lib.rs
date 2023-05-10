@@ -25,6 +25,6 @@ pub mod deposit_for_nft {
     }
 
     pub fn withdraw_half_for_nft(ctx: Context<WithdrawSolForNft>) -> Result<()> {
-        instructions::withdraw::handle(ctx, 5.0, 5.0)
+        instructions::withdraw::handle(ctx, 5, 5)
     }
 }

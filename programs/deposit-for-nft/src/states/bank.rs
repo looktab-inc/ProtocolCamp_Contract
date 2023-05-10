@@ -3,21 +3,20 @@ use anchor_lang::prelude::*;
 #[account]
 #[derive(Default, Debug)]
 pub struct BankAccount {
-    pub bank_auth: Pubkey,
-    pub auth_bump: u8,
-    pub sol_vault_bump: Option<u8>,
-    // pub nft_amount: u16,
-    pub nft_amount: NftAmount,
+    pub bank_auth: Pubkey,              // 32
+    pub auth_bump: u8,                  // 1
+    pub sol_vault_bump: Option<u8>,     // 1 + 1
+    pub nft_amount: NftAmount,          // 4
 }
 
 impl BankAccount {
-    pub const LEN: usize = 8 + 32 + 1 + 1 + 1 + 2 + 2;
+    pub const LEN: usize = 8 + 32 + 1 + 1 + 1 + 4;
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Default, Debug)]
 pub struct NftAmount {
-    total: u16,
-    remained: u16,
+    total: u16,     // 2
+    remained: u16,  // 2
 }
 
 impl NftAmount {

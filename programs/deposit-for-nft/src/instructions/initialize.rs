@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-use crate::states::BankAccount;
+use crate::states::{BankAccount, NftAmount};
 
 #[derive(Accounts)]
 pub struct Initialize<'info> {
@@ -18,7 +18,7 @@ pub fn handle(ctx: Context<Initialize>) -> Result<()> {
     let bank_account = &mut ctx.accounts.bank_account;
     bank_account.bank_auth = *ctx.accounts.bank_auth.key;
     bank_account.auth_bump = *ctx.bumps.get("pda_auth").unwrap();
-    bank_account.nft_amount = 0;
+    bank_account.nft_amount = NftAmount::new(0, 0);
 
     msg!("Smart Contract is initialized!");
     Ok(())

@@ -29,7 +29,7 @@ pub fn handle(ctx: Context<WithdrawSolForNft>, client_ratio: u8, bank_ratio: u8)
     let client_amount = 0.01 * (client_ratio as f64);
     let bank_amount = 0.01 * (bank_ratio as f64);
 
-    if bank_account.nft_amount > 0 {
+    if bank_account.nft_amount.remained() > 0 {
         let seeds = &[
             b"sol-vault",
             pda_auth.to_account_info().key.as_ref(),
@@ -67,9 +67,12 @@ pub fn handle(ctx: Context<WithdrawSolForNft>, client_ratio: u8, bank_ratio: u8)
             ((LAMPORTS_PER_SOL as f64) * bank_amount) as u64,
         )?;
 
-        bank_account.nft_amount -= 1;
+        bank_account.nft_amount.decrease_one();
 
-        msg!("NFT amount: {}", bank_account.nft_amount);
+        msg!(
+            "NFT remained amount: {}",
+            bank_account.nft_amount.remained()
+        );
 
         Ok(())
     } else {

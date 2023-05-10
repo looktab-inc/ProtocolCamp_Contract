@@ -34,7 +34,7 @@ pub fn handle(ctx: Context<DepositSolForNft>, amount: u64) -> Result<()> {
     let cpi = CpiContext::new(system_program.to_account_info(), cpi_accounts);
 
     system_program::transfer(cpi, amount)?;
-    bank_account.nft_amount += 1;
+    bank_account.nft_amount.increase_one();
 
     msg!("finished depositing sol for a NFT");
     Ok(())

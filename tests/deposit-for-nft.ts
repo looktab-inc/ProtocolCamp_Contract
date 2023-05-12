@@ -122,4 +122,10 @@ describe("bank-for-nft", () => {
     console.log(`[Bank Account Info]\n`);
     console.log(bankAccountInfo);
   });
+
+  it("Withdraw for like", async () => {
+  });
+
+  it("Withdraw for unlike", async () => {
+  });
 });

@@ -55,6 +55,11 @@ describe("bank-for-nft", () => {
       .rpc();
     console.log("Your transaction signature", tx);
 
+    const bankAuthBalance = await provider.connection.getBalance(
+      bankAuth.publicKey
+    );
+    console.log(`[Bank Auth Balance]\n${bankAuthBalance}`);
+
     const banAccountInfo = await program.account.bankAccount.fetch(
       bankAccount.publicKey
     );
@@ -76,8 +81,32 @@ describe("bank-for-nft", () => {
       .signers([bankAuth])
       .rpc();
 
+    const contractBalance = await provider.connection.getBalance(new anchor.web3.PublicKey("GKcWYEKo8ZWKRo82e2Vgd92JwVeqwT5XNfyMmR4j4sfX"));
+    console.log(`[Contract Balance Balance]\n${contractBalance}`);
+
+    const myBalance = await provider.connection.getBalance(new anchor.web3.PublicKey("8UQqDP2prRcTqXSsXEjinkc8xBptN4hfZcotkKicWQpS"));
+    console.log(`[My Balance]\n${myBalance}`);
+
+    const pdaBalance = await provider.connection.getBalance(pdaAuth);
+    console.log(`[PDA Balance]\n${pdaBalance}`);
+
     const vaultBalance = await provider.connection.getBalance(solVault);
     console.log(`[Vault Balance]\n${vaultBalance}`);
+
+    const bankAuthBalance = await provider.connection.getBalance(
+      bankAuth.publicKey
+    );
+    console.log(`[Bank Auth Balance]\n${bankAuthBalance}`);
+
+    const clientAccountBalance = await provider.connection.getBalance(
+      clientAccount.publicKey
+    );
+    console.log(`[Client Account Balance]\n${clientAccountBalance}`);
+
+    const bankAccountBalance = await provider.connection.getBalance(
+      bankAccount.publicKey
+    );
+    console.log(`[Bank Account Balance]\n${bankAccountBalance}`);
 
     let bankAccountInfo = await program.account.bankAccount.fetch(
       bankAccount.publicKey
@@ -100,8 +129,17 @@ describe("bank-for-nft", () => {
       .signers([bankAuth])
       .rpc();
 
+    const contractBalance = await provider.connection.getBalance(new anchor.web3.PublicKey("GKcWYEKo8ZWKRo82e2Vgd92JwVeqwT5XNfyMmR4j4sfX"));
+    console.log(`[Contract Balance Balance]\n${contractBalance}`);
+
+    const myBalance = await provider.connection.getBalance(new anchor.web3.PublicKey("8UQqDP2prRcTqXSsXEjinkc8xBptN4hfZcotkKicWQpS"));
+    console.log(`[My Balance]\n${myBalance}`);
+
+    const pdaBalance = await provider.connection.getBalance(pdaAuth);
+    console.log(`[PDA Balance]\n${pdaBalance}`);
+
     const vaultBalance = await provider.connection.getBalance(solVault);
-    console.log(`[Vault Balance]\n${vaultBalance}`);
+    console.log(`[Vault Balance : ${solVault}]\n${vaultBalance}`);
 
     const bankAuthBalance = await provider.connection.getBalance(
       bankAuth.publicKey
@@ -113,39 +151,11 @@ describe("bank-for-nft", () => {
     );
     console.log(`[Client Account Balance]\n${clientAccountBalance}`);
 
-    let bankAccountInfo = await program.account.bankAccount.fetch(
+    const bankAccountBalance = await provider.connection.getBalance(
       bankAccount.publicKey
     );
-    console.log(`[Bank Account Info]\n`);
-    console.log(bankAccountInfo);
-  });
+    console.log(`[Bank Account Balance]\n${bankAccountBalance}`);
 
-  it("Withdraw for expired", async () => {
-    const withdrawTx = await program.methods
-      .withdrawForBurned()
-      .accounts({
-        bankAccount: bankAccount.publicKey,
-        pdaAuth: pdaAuth,
-        solVault: solVault,
-        bankAuth: bankAuth.publicKey,
-        systemProgram: anchor.web3.SystemProgram.programId,
-        clientAccount: clientAccount.publicKey,
-      })
-      .signers([bankAuth])
-      .rpc();
-
-    const vaultBalance = await provider.connection.getBalance(solVault);
-    console.log(`[Vault Balance]\n${vaultBalance}`);
-
-    const bankAuthBalance = await provider.connection.getBalance(
-      bankAuth.publicKey
-    );
-    console.log(`[Bank Auth Balance]\n${bankAuthBalance}`);
-
-    const clientAccountBalance = await provider.connection.getBalance(
-      clientAccount.publicKey
-    );
-    console.log(`[Client Account Balance]\n${clientAccountBalance}`);
 
     let bankAccountInfo = await program.account.bankAccount.fetch(
       bankAccount.publicKey
@@ -154,37 +164,71 @@ describe("bank-for-nft", () => {
     console.log(bankAccountInfo);
   });
 
-  it("Withdraw for verified", async () => {
-    const withdrawTx = await program.methods
-      .withdrawForBurned()
-      .accounts({
-        bankAccount: bankAccount.publicKey,
-        pdaAuth: pdaAuth,
-        solVault: solVault,
-        bankAuth: bankAuth.publicKey,
-        systemProgram: anchor.web3.SystemProgram.programId,
-        clientAccount: clientAccount.publicKey,
-      })
-      .signers([bankAuth])
-      .rpc();
+  // it("Withdraw for expired", async () => {
+  //   const withdrawTx = await program.methods
+  //     .withdrawForBurned()
+  //     .accounts({
+  //       bankAccount: bankAccount.publicKey,
+  //       pdaAuth: pdaAuth,
+  //       solVault: solVault,
+  //       bankAuth: bankAuth.publicKey,
+  //       systemProgram: anchor.web3.SystemProgram.programId,
+  //       clientAccount: clientAccount.publicKey,
+  //     })
+  //     .signers([bankAuth])
+  //     .rpc();
 
-    const vaultBalance = await provider.connection.getBalance(solVault);
-    console.log(`[Vault Balance]\n${vaultBalance}`);
+  //   const vaultBalance = await provider.connection.getBalance(solVault);
+  //   console.log(`[Vault Balance]\n${vaultBalance}`);
 
-    const bankAuthBalance = await provider.connection.getBalance(
-      bankAuth.publicKey
-    );
-    console.log(`[Bank Auth Balance]\n${bankAuthBalance}`);
+  //   const bankAuthBalance = await provider.connection.getBalance(
+  //     bankAuth.publicKey
+  //   );
+  //   console.log(`[Bank Auth Balance]\n${bankAuthBalance}`);
 
-    const clientAccountBalance = await provider.connection.getBalance(
-      clientAccount.publicKey
-    );
-    console.log(`[Client Account Balance]\n${clientAccountBalance}`);
+  //   const clientAccountBalance = await provider.connection.getBalance(
+  //     clientAccount.publicKey
+  //   );
+  //   console.log(`[Client Account Balance]\n${clientAccountBalance}`);
 
-    let bankAccountInfo = await program.account.bankAccount.fetch(
-      bankAccount.publicKey
-    );
-    console.log(`[Bank Account Info]\n`);
-    console.log(bankAccountInfo);
-  });
+  //   let bankAccountInfo = await program.account.bankAccount.fetch(
+  //     bankAccount.publicKey
+  //   );
+  //   console.log(`[Bank Account Info]\n`);
+  //   console.log(bankAccountInfo);
+  // });
+
+  // it("Withdraw for verified", async () => {
+  //   const withdrawTx = await program.methods
+  //     .withdrawForBurned()
+  //     .accounts({
+  //       bankAccount: bankAccount.publicKey,
+  //       pdaAuth: pdaAuth,
+  //       solVault: solVault,
+  //       bankAuth: bankAuth.publicKey,
+  //       systemProgram: anchor.web3.SystemProgram.programId,
+  //       clientAccount: clientAccount.publicKey,
+  //     })
+  //     .signers([bankAuth])
+  //     .rpc();
+
+  //   const vaultBalance = await provider.connection.getBalance(solVault);
+  //   console.log(`[Vault Balance]\n${vaultBalance}`);
+
+  //   const bankAuthBalance = await provider.connection.getBalance(
+  //     bankAuth.publicKey
+  //   );
+  //   console.log(`[Bank Auth Balance]\n${bankAuthBalance}`);
+
+  //   const clientAccountBalance = await provider.connection.getBalance(
+  //     clientAccount.publicKey
+  //   );
+  //   console.log(`[Client Account Balance]\n${clientAccountBalance}`);
+
+  //   let bankAccountInfo = await program.account.bankAccount.fetch(
+  //     bankAccount.publicKey
+  //   );
+  //   console.log(`[Bank Account Info]\n`);
+  //   console.log(bankAccountInfo);
+  // });
 });

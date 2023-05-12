@@ -24,17 +24,15 @@ pub mod deposit_for_nft {
         instructions::deposit::handle(ctx)
     }
 
-    pub fn withdraw_half_for_nft(ctx: Context<WithdrawSolForNft>) -> Result<()> {
-        instructions::withdraw::handle(ctx, 5, 5)
+    pub fn withdraw_for_burned(ctx: Context<WithdrawSolForNft>) -> Result<()> {
+        instructions::withdraw::handle(ctx, 99, 1)
     }
 
-    pub fn withdraw_for_like(ctx: Context<WithdrawSolForNft>) -> Result<()> {
-        // instructions::withdraw::handle(ctx, 9, 1)
-        todo!()
+    pub fn withdraw_for_expired(ctx: Context<WithdrawSolForNft>) -> Result<()> {
+        instructions::withdraw::handle(ctx, 100, 0)
     }
 
-    pub fn withdraw_for_dislike(ctx: Context<WithdrawSolForNft>) -> Result<()> {
-        // instructions::withdraw::handle(ctx, 1, 9)
-        todo!()
+    pub fn withdraw_for_verified(ctx: Context<WithdrawSolForNft>) -> Result<()> {
+        instructions::withdraw::handle(ctx, 5, 95)
     }
 }

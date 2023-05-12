@@ -18,7 +18,7 @@ pub struct WithdrawSolForNft<'info> {
     pub client_account: SystemAccount<'info>,
 }
 
-pub fn handle(ctx: Context<WithdrawSolForNft>, client_ratio: u8, bank_ratio: u8) -> Result<()> {
+pub fn handle(ctx: Context<WithdrawSolForNft>, bank_ratio: u8, client_ratio: u8) -> Result<()> {
     msg!("withdraw sol for nft start!!");
 
     let system_program = &ctx.accounts.system_program;
@@ -26,8 +26,8 @@ pub fn handle(ctx: Context<WithdrawSolForNft>, client_ratio: u8, bank_ratio: u8)
     let pda_auth = &mut ctx.accounts.pda_auth;
     let sol_vault = &mut ctx.accounts.sol_vault;
 
-    let client_amount = (DEPOSIT_PER_NFT as f64 * (0.1 * client_ratio as f64)) as u64;
-    let bank_amount = (DEPOSIT_PER_NFT as f64 * (0.1 * bank_ratio as f64)) as u64;
+    let client_amount = (DEPOSIT_PER_NFT as f64 * (0.01 * client_ratio as f64)) as u64;
+    let bank_amount = (DEPOSIT_PER_NFT as f64 * (0.01 * bank_ratio as f64)) as u64;
 
     if bank_account.nft_amount.remained() > 0 {
         let seeds = &[

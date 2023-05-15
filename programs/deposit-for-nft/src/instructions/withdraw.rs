@@ -50,12 +50,7 @@ pub fn handle(ctx: Context<WithdrawSolForNft>, bank_ratio: u8, client_ratio: u8)
             cpi_accounts_to_client,
             sol_vault_signer,
         );
-        system_program::transfer(
-            cpi_to_client,
-            // ((LAMPORTS_PER_SOL as f64) * client_amount) as u64,
-            client_amount,
-            // 100000,
-        )?;
+        system_program::transfer(cpi_to_client, client_amount)?;
 
         // 2. transfer to bank_auth
         let cpi_accounts_to_bank_auth = system_program::Transfer {
@@ -67,13 +62,9 @@ pub fn handle(ctx: Context<WithdrawSolForNft>, bank_ratio: u8, client_ratio: u8)
             cpi_accounts_to_bank_auth,
             sol_vault_signer,
         );
-        // system_program::transfer(
-        //     cpi_to_bank_auth,
-        //     // ((LAMPORTS_PER_SOL as f64) * bank_amount) as u64,
-        //     bank_amount,
-        // )?;
+        system_program::transfer(cpi_to_bank_auth, bank_amount)?;
 
-        // bank_account.nft_amount.decrease_one();
+        bank_account.nft_amount.decrease_one();
 
         msg!(
             "NFT remained amount: {}",

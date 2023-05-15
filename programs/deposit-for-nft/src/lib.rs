@@ -25,14 +25,14 @@ pub mod deposit_for_nft {
     }
 
     pub fn withdraw_for_burned(ctx: Context<WithdrawSolForNft>) -> Result<()> {
-        instructions::withdraw::handle(ctx, 5, 92) // 99, 1
+        instructions::withdraw::handle(ctx, 90, 10) // 99, 1
     }
 
-    // pub fn withdraw_for_expired(ctx: Context<WithdrawSolForNft>) -> Result<()> {
-    //     instructions::withdraw::handle(ctx, 100, 0)
-    // }
+    pub fn withdraw_for_expired(ctx: Context<WithdrawSolForNft>) -> Result<()> {
+        instructions::withdraw::handle(ctx, 100, 0)
+    }
 
-    // pub fn withdraw_for_verified(ctx: Context<WithdrawSolForNft>) -> Result<()> {
-    //     instructions::withdraw::handle(ctx, 5, 95) // 5, 95
-    // }
+    pub fn withdraw_for_verified(ctx: Context<WithdrawSolForNft>) -> Result<()> {
+        instructions::withdraw::handle(ctx, 10, 90) // 5, 95
+    }
 }

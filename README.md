@@ -4,6 +4,7 @@ It is based on Anchor Framework.
 
 # Instructions
  - initialize
- - deposit for minted NFT
- - withdraw for like
- - withdraw for dislike
+ - depositForNft
+ - withdrawForBurned
+ - withdrawForExpired
+ - withdrawForVerified

@@ -2,19 +2,19 @@
 Solana Smart Contract is for Tiji to manage deposits that is sent for minted NFTs.  
 It is based on Anchor Framework.
 
-# Accounts
+## Accounts
  - BankAccount
 
-# Instructions
+## Instructions
  - initialize
  - depositForNft
  - withdrawForBurned
  - withdrawForExpired
  - withdrawForVerified
 
-# Types
+## Types
  - NftAmount
 
-# CustomErrors
+## CustomErrors
  - InitializeError
  - NoNftLeftError

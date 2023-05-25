@@ -12,6 +12,7 @@ describe("bank-for-nft", () => {
   const bankAuth = anchor.web3.Keypair.generate();
   const bankAccount = anchor.web3.Keypair.generate();
   const clientAccount = anchor.web3.Keypair.generate();
+  const recommenderAccount = anchor.web3.Keypair.generate();
 
   let [pdaAuth, _pdaBump] = anchor.web3.PublicKey.findProgramAddressSync(
     [
@@ -133,6 +134,7 @@ describe("bank-for-nft", () => {
         bankAuth: bankAuth.publicKey,
         systemProgram: anchor.web3.SystemProgram.programId,
         clientAccount: clientAccount.publicKey,
+        recommenderAccount: recommenderAccount.publicKey,
       })
       .signers([bankAuth])
       .rpc();
@@ -163,10 +165,15 @@ describe("bank-for-nft", () => {
     );
     console.log(`[Client Account Balance]\n${clientAccountBalance}`);
 
-    const bankAccountBalance = await provider.connection.getBalance(
-      bankAccount.publicKey
+    // const bankAccountBalance = await provider.connection.getBalance(
+    //   bankAccount.publicKey
+    // );
+    // console.log(`[Bank Account Balance]\n${bankAccountBalance}`);
+
+    const recommenderAccountBalance = await provider.connection.getBalance(
+      recommenderAccount.publicKey
     );
-    console.log(`[Bank Account Balance]\n${bankAccountBalance}`);
+    console.log(`[Recommender Account Balance]\n${recommenderAccountBalance}`);
 
     let bankAccountInfo = await program.account.bankAccount.fetch(
       bankAccount.publicKey
@@ -185,6 +192,7 @@ describe("bank-for-nft", () => {
         bankAuth: bankAuth.publicKey,
         systemProgram: anchor.web3.SystemProgram.programId,
         clientAccount: clientAccount.publicKey,
+        recommenderAccount: recommenderAccount.publicKey,
       })
       .signers([bankAuth])
       .rpc();
@@ -201,6 +209,11 @@ describe("bank-for-nft", () => {
       clientAccount.publicKey
     );
     console.log(`[Client Account Balance]\n${clientAccountBalance}`);
+
+    const recommenderAccountBalance = await provider.connection.getBalance(
+      recommenderAccount.publicKey
+    );
+    console.log(`[Recommender Account Balance]\n${recommenderAccountBalance}`);
 
     let bankAccountInfo = await program.account.bankAccount.fetch(
       bankAccount.publicKey
@@ -219,6 +232,7 @@ describe("bank-for-nft", () => {
         bankAuth: bankAuth.publicKey,
         systemProgram: anchor.web3.SystemProgram.programId,
         clientAccount: clientAccount.publicKey,
+        recommenderAccount: recommenderAccount.publicKey,
       })
       .signers([bankAuth])
       .rpc();
@@ -235,6 +249,11 @@ describe("bank-for-nft", () => {
       clientAccount.publicKey
     );
     console.log(`[Client Account Balance]\n${clientAccountBalance}`);
+
+    const recommenderAccountBalance = await provider.connection.getBalance(
+      recommenderAccount.publicKey
+    );
+    console.log(`[Recommender Account Balance]\n${recommenderAccountBalance}`);
 
     let bankAccountInfo = await program.account.bankAccount.fetch(
       bankAccount.publicKey

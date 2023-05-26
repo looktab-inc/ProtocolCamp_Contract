@@ -11,7 +11,6 @@ export interface WithdrawForBurnedAccounts {
   bankAuth: PublicKey
   systemProgram: PublicKey
   clientAccount: PublicKey
-  recommenderAccount: PublicKey
 }
 
 export function withdrawForBurned(accounts: WithdrawForBurnedAccounts) {
@@ -22,7 +21,6 @@ export function withdrawForBurned(accounts: WithdrawForBurnedAccounts) {
     { pubkey: accounts.bankAuth, isSigner: true, isWritable: true },
     { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
     { pubkey: accounts.clientAccount, isSigner: false, isWritable: true },
-    { pubkey: accounts.recommenderAccount, isSigner: false, isWritable: true },
   ]
   const identifier = Buffer.from([13, 194, 98, 63, 141, 183, 223, 245])
   const data = identifier

@@ -12,8 +12,8 @@ deposit_for_nft = "GKcWYEKo8ZWKRo82e2Vgd92JwVeqwT5XNfyMmR4j4sfX"
 
 [provider]
 # cluster = "Localnet"
-cluster = "http://127.0.0.1:8899"
-# cluster = "devnet"
+# cluster = "http://127.0.0.1:8899"
+cluster = "devnet"
 wallet = "/Users/taegi/.config/solana/id.json"
 
 [scripts]

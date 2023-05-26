@@ -11,7 +11,6 @@ export interface WithdrawForExpiredAccounts {
   bankAuth: PublicKey
   systemProgram: PublicKey
   clientAccount: PublicKey
-  recommenderAccount: PublicKey
 }
 
 export function withdrawForExpired(accounts: WithdrawForExpiredAccounts) {
@@ -22,7 +21,6 @@ export function withdrawForExpired(accounts: WithdrawForExpiredAccounts) {
     { pubkey: accounts.bankAuth, isSigner: true, isWritable: true },
     { pubkey: accounts.systemProgram, isSigner: false, isWritable: false },
     { pubkey: accounts.clientAccount, isSigner: false, isWritable: true },
-    { pubkey: accounts.recommenderAccount, isSigner: false, isWritable: true },
   ]
   const identifier = Buffer.from([90, 123, 129, 146, 41, 253, 69, 183])
   const data = identifier

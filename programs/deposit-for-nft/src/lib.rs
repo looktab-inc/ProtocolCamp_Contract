@@ -8,7 +8,9 @@ mod states;
 pub use errors::DepositForNftError;
 pub use instructions::deposit::*;
 pub use instructions::initialize::*;
-pub use instructions::withdraw::*;
+pub use instructions::withdraw_for_burn::*;
+pub use instructions::withdraw_for_expire::*;
+pub use instructions::withdraw_for_verify::*;
 
 declare_id!("GKcWYEKo8ZWKRo82e2Vgd92JwVeqwT5XNfyMmR4j4sfX");
 
@@ -24,15 +26,15 @@ pub mod deposit_for_nft {
         instructions::deposit::handle(ctx)
     }
 
-    pub fn withdraw_for_burned(ctx: Context<WithdrawSolForNft>) -> Result<()> {
-        instructions::withdraw::handle(ctx, 90, 10) // 99, 1
+    pub fn withdraw_for_burned(ctx: Context<WithdrawForBurn>) -> Result<()> {
+        instructions::withdraw_for_burn::handle(ctx, 90, 10) // 99, 1
     }
 
-    pub fn withdraw_for_expired(ctx: Context<WithdrawSolForNft>) -> Result<()> {
-        instructions::withdraw::handle(ctx, 100, 0)
+    pub fn withdraw_for_expired(ctx: Context<WithdrawForExpire>) -> Result<()> {
+        instructions::withdraw_for_expire::handle(ctx, 100, 0)
     }
 
-    pub fn withdraw_for_verified(ctx: Context<WithdrawSolForNft>) -> Result<()> {
-        instructions::withdraw::handle(ctx, 10, 90) // 5, 95
+    pub fn withdraw_for_verified(ctx: Context<WithdrawForVerify>) -> Result<()> {
+        instructions::withdraw_for_verify::handle(ctx, 20, 80) // 20, 80
     }
 }

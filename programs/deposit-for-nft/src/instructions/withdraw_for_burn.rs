@@ -3,7 +3,7 @@ use anchor_lang::{prelude::*, system_program};
 use crate::{constants::DEPOSIT_PER_NFT, states::BankAccount, DepositForNftError};
 
 #[derive(Accounts)]
-pub struct WithdrawSolForNft<'info> {
+pub struct WithdrawForBurn<'info> {
     #[account(has_one = bank_auth)]
     pub bank_account: Account<'info, BankAccount>,
     #[account(seeds = [b"pda-auth", bank_account.key().as_ref()], bump = bank_account.auth_bump)]
@@ -16,11 +16,9 @@ pub struct WithdrawSolForNft<'info> {
     pub system_program: Program<'info, System>,
     #[account(mut)]
     pub client_account: SystemAccount<'info>,
-    #[account(mut)]
-    pub recommender_account: SystemAccount<'info>,
 }
 
-pub fn handle(ctx: Context<WithdrawSolForNft>, recommender_ratio: u8, client_ratio: u8) -> Result<()> {
+pub fn handle(ctx: Context<WithdrawForBurn>, bank_ratio: u8, client_ratio: u8) -> Result<()> {
     msg!("withdraw sol for nft start!!");
 
     let system_program = &ctx.accounts.system_program;
@@ -28,10 +26,10 @@ pub fn handle(ctx: Context<WithdrawSolForNft>, recommender_ratio: u8, client_rat
     let pda_auth = &mut ctx.accounts.pda_auth;
     let sol_vault = &mut ctx.accounts.sol_vault;
 
-    let recommender_ratio = (DEPOSIT_PER_NFT as f64 * (0.01 * recommender_ratio as f64)) as u64;
+    let bank_amount = (DEPOSIT_PER_NFT as f64 * (0.01 * bank_ratio as f64)) as u64;
     let client_amount = (DEPOSIT_PER_NFT as f64 * (0.01 * client_ratio as f64)) as u64;
 
-    msg!("recommender_ratio : {}", recommender_ratio);
+    msg!("bank_amount : {}", bank_amount);
     msg!("Client_amount : {}", client_amount);
 
     if bank_account.nft_amount.remained() > 0 {
@@ -57,14 +55,14 @@ pub fn handle(ctx: Context<WithdrawSolForNft>, recommender_ratio: u8, client_rat
         // 2. transfer to bank_auth
         let cpi_accounts_to_bank_auth = system_program::Transfer {
             from: sol_vault.to_account_info(),
-            to: ctx.accounts.recommender_account.to_account_info(),
+            to: ctx.accounts.bank_auth.to_account_info(),
         };
         let cpi_to_bank_auth = CpiContext::new_with_signer(
             system_program.to_account_info(),
             cpi_accounts_to_bank_auth,
             sol_vault_signer,
         );
-        system_program::transfer(cpi_to_bank_auth, recommender_ratio)?;
+        system_program::transfer(cpi_to_bank_auth, bank_amount)?;
 
         bank_account.nft_amount.decrease_one();
 

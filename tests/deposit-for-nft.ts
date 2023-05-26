@@ -134,7 +134,6 @@ describe("bank-for-nft", () => {
         bankAuth: bankAuth.publicKey,
         systemProgram: anchor.web3.SystemProgram.programId,
         clientAccount: clientAccount.publicKey,
-        recommenderAccount: recommenderAccount.publicKey,
       })
       .signers([bankAuth])
       .rpc();
@@ -192,7 +191,6 @@ describe("bank-for-nft", () => {
         bankAuth: bankAuth.publicKey,
         systemProgram: anchor.web3.SystemProgram.programId,
         clientAccount: clientAccount.publicKey,
-        recommenderAccount: recommenderAccount.publicKey,
       })
       .signers([bankAuth])
       .rpc();
